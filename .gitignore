@@ -4,4 +4,7 @@ target
 build
 toolchain/**
 
+grub/**
+!grub/boot/grub/grub.cfg
+
 !toolchain/setup-toolchain.sh
