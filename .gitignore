@@ -2,3 +2,6 @@
 
 target
 build
+toolchain/**
+
+!toolchain/setup-toolchain.sh

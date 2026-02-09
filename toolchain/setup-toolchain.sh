@@ -23,8 +23,8 @@ cd $parent_path/build/gcc
 ../gcc-15.2.0/configure --target=$TARGET --prefix="$PREFIX" \
     --disable-nls --enable-languages=c --without-headers \
     --disable-hosted-libstdcxx
-make all-gcc
-make all-target-libgcc
+make -j 4 all-gcc
+make -j 4 all-target-libgcc
 make all-target-libstdc++-v3
 make install-gcc
 make install-target-libgcc
