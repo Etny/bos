@@ -9,18 +9,20 @@ TARGET := $(TARGET_PATH)/$(TARGET_NAME)
 TARGET_GRUB := $(GRUB_PATH)/boot/$(TARGET_NAME)
 TARGET_ISO := $(TARGET).iso
 
-CC := /home/ynte/opt/cross/bin/i686-elf-gcc
-AS := /home/ynte/opt/cross/bin/i686-elf-as
+CC := ./toolchain/bin/i686-elf-gcc
+AS := ./toolchain/bin/i686-elf-as
 
-CFLAGS := -Wall -Wextra \
-		 -O2 \
-		 -ffreestanding \
-		 --std=gnu99 
+CFLAGS := 	-Wall -Wextra \
+			-g \
+			-O2 \
+			-ffreestanding \
+			-std=gnu99  
 
-LDFLAGS := -O2 \
-		  -nostdlib \
-		  -ffreestanding \
-		  -lgcc
+LDFLAGS :=	-g \
+			-O2 \
+		  	-nostdlib \
+		  	-ffreestanding \
+		  	-lgcc 
 
 ASM := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.s*)))
 SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c*)))
@@ -37,7 +39,7 @@ CLEAN_LIST := $(TARGET) \
 
 
 .PHONY: all
-all: dirs $(TARGET)
+all: $(TARGET)
 	@grub2-file --is-x86-multiboot $(TARGET)
 	@echo Finished building $(TARGET_NAME).
 
@@ -45,8 +47,8 @@ all: dirs $(TARGET)
 dirs:
 	@mkdir -p $(TARGET_PATH) $(BUILD_PATH)
 
-$(TARGET): $(OBJ)
-	$(CC) -T link.ld $(LDFLAGS) -o $@ $^
+$(TARGET): dirs $(OBJ)
+	$(CC) -T link.ld $(LDFLAGS) -o $@ $(OBJ)
 
 $(BUILD_PATH)/%.o: %.c
 	$(CC) $(CFLAGS) -o $@ -c $<
@@ -78,3 +80,4 @@ clean:
 distclean:
 	@echo Cleaning $(DISTCLEAN_LIST)...
 	@rm -f $(DISTCLEAN_LIST)
+

@@ -9,6 +9,10 @@ SECTIONS {
         *(.text)
     }
 
+    .boot BLOCK(4K) : ALIGN(4K) {
+        *(.boot_gdt)
+    }
+
     .rodata BLOCK(4K) : ALIGN(4K) {
         *(.rodata)
     }

@@ -24,10 +24,13 @@ stack_top:
 .global _start
 .type _start, @function
 _start:
-
     // Set up stack
     mov $stack_top, %esp
-    
+
+    mov %cr0, %eax
+    test $1, %eax
+
+
     call kernel_main
 
     cli
