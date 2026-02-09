@@ -1,5 +1,4 @@
-#include "asm.h"
-#include "gdt.h"
+#include "ia32/gdt.h"
 #include "terminal.h"
 #include <stdbool.h>
 #include <stddef.h>

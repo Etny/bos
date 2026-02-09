@@ -24,10 +24,10 @@ LDFLAGS :=	-g \
 		  	-ffreestanding \
 		  	-lgcc 
 
-ASM := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.s*)))
-SRC := $(foreach x, $(SRC_PATH), $(wildcard $(addprefix $(x)/*,.c*)))
-OBJ := $(addprefix $(BUILD_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC) $(ASM)))))
-VPATH = $(sort $(dir $(SRC) $(ASM)))
+rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
+SRC := $(foreach x, $(SRC_PATH), $(call rwildcard,src,*.c *.s))
+OBJ := $(addprefix $(BUILD_PATH)/, $(addsuffix .o, $(notdir $(basename $(SRC)))))
+VPATH = $(sort $(dir $(SRC)))
 
 DISTCLEAN_LIST := $(OBJ)
 
