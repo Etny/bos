@@ -6,13 +6,6 @@
 
 void setup_gdt(void);
 
-struct gdt {
-  uint64_t gdt[32];
-} __attribute__((packed));
+struct gdt_header;
 
-struct gdt_desc {
-  uint16_t limit;
-  uint32_t base;
-} __attribute__((packed));
-
-#endif // !GDT_H
+#endif  // !GDT_H
