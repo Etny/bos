@@ -4,7 +4,10 @@ BUILD_PATH := build
 SRC_PATH := src
 GRUB_PATH := grub
 
+VERSION=0.0.1
+
 TARGET_NAME := bos
+TARGET_ARCH := ia32
 TARGET := $(TARGET_PATH)/$(TARGET_NAME)
 TARGET_GRUB := $(GRUB_PATH)/boot/$(TARGET_NAME)
 TARGET_ISO := $(TARGET).iso
@@ -12,11 +15,13 @@ TARGET_ISO := $(TARGET).iso
 CC := ./toolchain/bin/i686-elf-gcc
 AS := ./toolchain/bin/i686-elf-as
 
-CFLAGS := 	-Wall -Wextra \
+CFLAGS := 	-Wall -Wextra -Werror \
 			-g \
 			-O2 \
 			-ffreestanding \
-			-std=gnu99  
+			-std=gnu99  \
+			-D__VERSION=\"$(VERSION)\" \
+			-Isrc/include -Isrc/$(TARGET_ARCH)/include
 
 LDFLAGS :=	-g \
 			-O2 \

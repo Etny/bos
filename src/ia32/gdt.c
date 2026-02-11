@@ -1,5 +1,7 @@
 #include "gdt.h"
 
+#include <stdint.h>
+
 #include "asm.h"
 
 struct gdt_entry {
@@ -13,11 +15,6 @@ struct gdt_entry {
 
 struct gdt {
   struct gdt_entry gdt[32];
-} __attribute__((packed));
-
-struct gdt_header {
-  uint16_t limit;
-  uint32_t base;
 } __attribute__((packed));
 
 #define SEG_DESC(base, limit, flagbits)     {                   \
@@ -44,9 +41,10 @@ struct gdt boot_gdt __attribute__((section(".boot_gdt"))) = {
 
 void setup_gdt(void) {
   struct gdt_header desc = {
-      .base = (uint32_t)((uint64_t)&boot_gdt & 0xFFFFFFFF),
+      .base = (uint32_t)&boot_gdt,
       .limit = sizeof(struct gdt) - 1,
   };
+
   load_gdt(&desc);
   refresh_cs();
 }

@@ -29,5 +29,6 @@ void term_printchar(char c);
 void term_putchar_at(char c, size_t x, size_t y);
 void term_write(const char *str);
 void term_writeline(const char *str);
+void term_nextline(void);
 
-#endif // !TERMINAL_H
+#endif  // !TERMINAL_H

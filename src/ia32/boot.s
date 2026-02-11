@@ -27,10 +27,6 @@ _start:
     // Set up stack
     mov $stack_top, %esp
 
-    mov %cr0, %eax
-    test $1, %eax
-
-
     call kernel_main
 
     cli

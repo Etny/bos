@@ -1,0 +1,112 @@
+[
+  {
+    "arguments": [
+      "./toolchain/bin/i686-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g",
+      "-O2",
+      "-ffreestanding",
+      "-std=gnu99",
+      "-D__VERSION=\"0.0.1\"",
+      "-Isrc/include",
+      "-Isrc/ia32/include",
+      "-c",
+      "-o",
+      "build/asm_c.o",
+      "src/ia32/asm_c.c"
+    ],
+    "directory": "/home/ynte/Code/c/bos",
+    "file": "/home/ynte/Code/c/bos/src/ia32/asm_c.c",
+    "output": "/home/ynte/Code/c/bos/build/asm_c.o"
+  },
+  {
+    "arguments": [
+      "./toolchain/bin/i686-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g",
+      "-O2",
+      "-ffreestanding",
+      "-std=gnu99",
+      "-D__VERSION=\"0.0.1\"",
+      "-Isrc/include",
+      "-Isrc/ia32/include",
+      "-c",
+      "-o",
+      "build/gdt.o",
+      "src/ia32/gdt.c"
+    ],
+    "directory": "/home/ynte/Code/c/bos",
+    "file": "/home/ynte/Code/c/bos/src/ia32/gdt.c",
+    "output": "/home/ynte/Code/c/bos/build/gdt.o"
+  },
+  {
+    "arguments": [
+      "./toolchain/bin/i686-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g",
+      "-O2",
+      "-ffreestanding",
+      "-std=gnu99",
+      "-D__VERSION=\"0.0.1\"",
+      "-Isrc/include",
+      "-Isrc/ia32/include",
+      "-c",
+      "-o",
+      "build/kernel.o",
+      "src/kernel.c"
+    ],
+    "directory": "/home/ynte/Code/c/bos",
+    "file": "/home/ynte/Code/c/bos/src/kernel.c",
+    "output": "/home/ynte/Code/c/bos/build/kernel.o"
+  },
+  {
+    "arguments": [
+      "./toolchain/bin/i686-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g",
+      "-O2",
+      "-ffreestanding",
+      "-std=gnu99",
+      "-D__VERSION=\"0.0.1\"",
+      "-Isrc/include",
+      "-Isrc/ia32/include",
+      "-c",
+      "-o",
+      "build/str.o",
+      "src/str.c"
+    ],
+    "directory": "/home/ynte/Code/c/bos",
+    "file": "/home/ynte/Code/c/bos/src/str.c",
+    "output": "/home/ynte/Code/c/bos/build/str.o"
+  },
+  {
+    "arguments": [
+      "./toolchain/bin/i686-elf-gcc",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-g",
+      "-O2",
+      "-ffreestanding",
+      "-std=gnu99",
+      "-D__VERSION=\"0.0.1\"",
+      "-Isrc/include",
+      "-Isrc/ia32/include",
+      "-c",
+      "-o",
+      "build/terminal.o",
+      "src/terminal.c"
+    ],
+    "directory": "/home/ynte/Code/c/bos",
+    "file": "/home/ynte/Code/c/bos/src/terminal.c",
+    "output": "/home/ynte/Code/c/bos/build/terminal.o"
+  }
+]
