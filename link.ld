@@ -10,7 +10,7 @@ SECTIONS {
     }
 
     .boot BLOCK(4K) : ALIGN(4K) {
-        *(.boot_gdt)
+        *(.desc_tables)
     }
 
     .rodata BLOCK(4K) : ALIGN(4K) {
@@ -25,4 +25,6 @@ SECTIONS {
         *(COMMON)
         *(.bss)
     }
+
+    _end = .;
 }

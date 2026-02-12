@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 
+#include "./gdt_dec.h"
 #include "asm.h"
 
 struct gdt_entry {
@@ -26,14 +27,10 @@ struct gdt {
     .base_upper     =   ((base      >> 24)  & 0x000000FF),      \
 }
 
-#define GDT_NULL_SEG        0
-#define GDT_KERNEL_CODE_SEG 1
-#define GDT_KERNEL_DATA_SEG 2
-
 #define FLAGS_KERNEL_CODE (uint16_t)((0b1100 << 12) | 0b10011011)
 #define FLAGS_KERNEL_DATA (uint16_t)((0b1100 << 12) | 0b10010011)
 
-struct gdt boot_gdt __attribute__((section(".boot_gdt"))) = {
+struct gdt boot_gdt __attribute__((section(".desc_tables"))) = {
     .gdt = {
         [GDT_NULL_SEG] = SEG_DESC(0, 0, 0),
         [GDT_KERNEL_CODE_SEG] = SEG_DESC(0, 0x000FFFFF, FLAGS_KERNEL_CODE),

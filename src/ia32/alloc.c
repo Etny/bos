@@ -5,18 +5,19 @@
 
 #include "panic.h"
 
-#define HEAP_SIZE 0xFFFFFF
+#define HEAP_SIZE (ptrdiff_t)0xFFFFFFFF
 
-char heap[HEAP_SIZE];
-size_t head = 0;
+extern char _end;
+
+char* head = &_end;
 
 void* malloc(size_t size) {
-  char* ret = heap + head;
+  char* ret = head;
   head += size;
 
   // For alignment
   head = (head + 7) - ~7;
-  REQUIRE(head < HEAP_SIZE);
+  REQUIRE(head - &_end < HEAP_SIZE);
 
   return ret;
 }

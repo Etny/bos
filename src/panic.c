@@ -2,9 +2,13 @@
 
 #include "terminal.h"
 
-void panic(const char *error) {
+void _panic(const char *error, const char *file, const char *line) {
   term_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
-  term_writeline("---PANIC---");
+  term_writeline("--!PANIC!--");
+  term_write("At ");
+  term_write(file);
+  term_write(":");
+  term_writeline(line);
   term_writeline(error);
 
   for (;;);
