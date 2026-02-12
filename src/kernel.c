@@ -25,5 +25,7 @@ void kernel_main(void) {
   setup_gdt();
   setup_idt();
 
-  asm volatile("int $0");
+  asm volatile("int $1");
+
+  term_writeline("exiting...");
 }

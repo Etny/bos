@@ -27,9 +27,9 @@ int32_t atoi(const char *str) {
   return sign * out;
 }
 
-void itos(int32_t val, char *buffer, size_t bufsize) {
+char *itos(int32_t val, char *buffer, size_t bufsize) {
   int32_t temp = val;
-  size_t required_len = 1;
+  size_t total_len, required_len = 1;
 
   if (temp < 0) {
     required_len++;
@@ -41,6 +41,7 @@ void itos(int32_t val, char *buffer, size_t bufsize) {
   }
 
   REQUIRE(required_len <= bufsize);
+  total_len = required_len;
 
   buffer[required_len--] = 0;
 
@@ -54,4 +55,21 @@ void itos(int32_t val, char *buffer, size_t bufsize) {
     buffer[required_len--] = c;
     val = (val - (val % 10)) / 10;
   } while (val > 0);
+
+  return buffer + total_len;
+}
+
+void *memcpy(void *restrict dest, void *restrict src, size_t len) {
+  const uint8_t *src_p = (const uint8_t *)src;
+  uint8_t *dest_p = (uint8_t *)dest;
+  for (; len; len--) *dest_p++ = *src_p++;
+
+  return dest;
+}
+
+char *strcpy(char *restrict dest, const char *restrict src) {
+  do {
+    *dest++ = *src++;
+  } while (*src);
+  return dest;
 }
