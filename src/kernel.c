@@ -8,6 +8,7 @@
 #include "gdt.h"
 #include "idt.h"
 #include "panic.h"
+#include "print.h"
 #include "str.h"
 #include "terminal.h"
 
@@ -15,17 +16,15 @@ void kernel_main(void) {
   term_init();
   term_writeline("Bad Operating System version " __VERSION " booting...");
 
-  char buf[20];
-  read_vendor_id(buf);
-  term_write("running on ");
-  term_writeline(buf);
-
-  bool is_protected = is_protected_mode();
-
-  if (is_protected)
+  if (is_protected_mode())
     term_writeline("running in 32-bit protected mode");
   else
     panic("Uh-oh, we are running in 16-bit real mode...");
+
+  print(1233);
+
+  term_write("running on ");
+  term_writeline(get_vendor_id().name);
 
   setup_gdt();
   setup_idt();

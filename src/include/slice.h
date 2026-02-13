@@ -33,6 +33,6 @@ __SLICE_TYPES(a, b)
         default: (struct slice_void_ptr) {.ptr = (void*)base, .len = length} \
 )
 
-#define slice(base) to_slice_len(base, (sizeof(base) / sizeof(base[0])))
+#define slice(base) slice_len(base, (sizeof(base) / sizeof(base[0])))
 
 #endif
