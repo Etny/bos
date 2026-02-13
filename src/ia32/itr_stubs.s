@@ -51,6 +51,7 @@ itr_stub_common:
     mov %ax, %es
     mov %ax, %fs
     mov %ax, %gs
+    mov %ax, %ss
 
     push %esp
     call exception_handler
@@ -62,6 +63,7 @@ itr_stub_common:
     mov %bx, %es
     mov %bx, %fs
     mov %bx, %gs
+    mov %bx, %ss
 
     popa
     addl $8, %esp     # move the stack down 8 bytes to clean 

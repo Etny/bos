@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 void *memcpy(void *restrict dest, void *restrict src, size_t len);
+void *memmove(void *dest, void *src, size_t len);
 
 char *strcpy(char *restrict dest, const char *restrict src);
 

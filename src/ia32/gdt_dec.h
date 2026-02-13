@@ -8,7 +8,4 @@
 #define GDT_KERNEL_CODE_SEG_IDX 0x08
 #define GDT_KERNEL_DATA_SEG_IDX 0x10
 
-#define TABLE_GDT 0
-#define TABLE_IDT 1
-
 #endif  // !__GDT_DEC_H

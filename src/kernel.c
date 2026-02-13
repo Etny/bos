@@ -5,15 +5,23 @@
 
 #include "alloc.h"
 #include "asm.h"
+#include "cpu.h"
 #include "gdt.h"
 #include "idt.h"
 #include "panic.h"
 #include "str.h"
 #include "terminal.h"
 
+char buf[20];
+
 void kernel_main(void) {
   term_init();
   term_writeline("Bad Operating System version " __VERSION " booting...");
+
+  char buf[20];
+  read_vendor_id(buf);
+  term_write("running on ");
+  term_writeline(buf);
 
   bool is_protected = is_protected_mode();
 
@@ -24,8 +32,6 @@ void kernel_main(void) {
 
   setup_gdt();
   setup_idt();
-
-  asm volatile("int $1");
 
   term_writeline("exiting...");
 }

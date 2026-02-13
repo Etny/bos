@@ -1,5 +1,4 @@
 
-
 .section .text
 .globl enable_protected_mode
 .type enable_protected_mode, @function
@@ -28,3 +27,21 @@ refresh_cs:
     mov %ax, %ss
     ret
 
+
+.section .text
+.globl read_vendor_id
+.type read_vendor_id, @function
+read_vendor_id:
+    push %ebp
+    mov %esp, %ebp
+    push %ebx
+    mov 8(%ebp), %edi
+    xor %eax, %eax
+    cpuid
+    mov %ebx, 0(%edi)
+    mov %edx, 4(%edi)
+    mov %ecx, 8(%edi)
+    movb $0, 12(%edi)
+    pop %ebx
+    pop %ebp
+    ret

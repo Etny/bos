@@ -59,11 +59,21 @@ char *itos(int32_t val, char *buffer, size_t bufsize) {
   return buffer + total_len;
 }
 
-void *memcpy(void *restrict dest, void *restrict src, size_t len) {
+void *memcpy(void *restrict dest, void *const restrict src, size_t len) {
   const uint8_t *src_p = (const uint8_t *)src;
   uint8_t *dest_p = (uint8_t *)dest;
   for (; len; len--) *dest_p++ = *src_p++;
 
+  return dest;
+}
+
+void *memmove(void *dest, void *src, size_t len) {
+  const uint8_t *src_p = (const uint8_t *)src;
+  uint8_t *dest_p = (uint8_t *)dest;
+  if (src > dest)
+    for (; len; len--) *dest_p++ = *src_p++;
+  else
+    while (len--) dest_p[len] = src_p[len];
   return dest;
 }
 

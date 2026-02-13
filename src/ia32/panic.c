@@ -3,6 +3,7 @@
 #include "terminal.h"
 
 void _panic(const char *error, const char *file, const char *line) {
+  asm volatile("cli");
   term_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
   term_writeline("--!PANIC!--");
   term_write("At ");

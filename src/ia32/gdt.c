@@ -31,10 +31,9 @@ struct gdt {
 #define FLAGS_KERNEL_DATA (uint16_t)((0b1100 << 12) | 0b10010011)
 
 struct gdt boot_gdt __attribute__((section(".desc_tables"))) = {
-    .gdt = {
-        [GDT_NULL_SEG] = SEG_DESC(0, 0, 0),
-        [GDT_KERNEL_CODE_SEG] = SEG_DESC(0, 0x000FFFFF, FLAGS_KERNEL_CODE),
-        [GDT_KERNEL_DATA_SEG] = SEG_DESC(0, 0x000FFFFF, FLAGS_KERNEL_DATA)}};
+    .gdt = {[GDT_NULL_SEG] = SEG_DESC(0, 0, 0),
+            [GDT_KERNEL_CODE_SEG] = SEG_DESC(0, 0xFFFFF, FLAGS_KERNEL_CODE),
+            [GDT_KERNEL_DATA_SEG] = SEG_DESC(0, 0xFFFFF, FLAGS_KERNEL_DATA)}};
 
 void setup_gdt(void) {
   struct gdt_header desc = {
