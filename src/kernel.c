@@ -3,7 +3,6 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include "alloc.h"
 #include "asm.h"
 #include "cpu.h"
 #include "gdt.h"
@@ -11,8 +10,6 @@
 #include "panic.h"
 #include "str.h"
 #include "terminal.h"
-
-char buf[20];
 
 void kernel_main(void) {
   term_init();

@@ -3,6 +3,7 @@
 #include <stdint.h>
 
 #include "panic.h"
+#include "slice.h"
 
 size_t strlen(const char *str) {
   size_t len = 0;
@@ -27,7 +28,7 @@ int32_t atoi(const char *str) {
   return sign * out;
 }
 
-char *itos(int32_t val, char *buffer, size_t bufsize) {
+char *itos(int32_t val, struct slice_char buf) {
   int32_t temp = val;
   size_t total_len, required_len = 1;
 
@@ -40,23 +41,23 @@ char *itos(int32_t val, char *buffer, size_t bufsize) {
     temp = (temp - (temp % 10)) / 10;
   }
 
-  REQUIRE(required_len <= bufsize);
+  REQUIRE(required_len <= buf.len);
   total_len = required_len;
 
-  buffer[required_len--] = 0;
+  buf.ptr[required_len--] = 0;
 
   if (val < 0) {
-    buffer[0] = '-';
+    buf.ptr[0] = '-';
     val *= -1;
   }
 
   do {
     char c = (val % 10) + '0';
-    buffer[required_len--] = c;
+    buf.ptr[required_len--] = c;
     val = (val - (val % 10)) / 10;
   } while (val > 0);
 
-  return buffer + total_len;
+  return buf.ptr + total_len;
 }
 
 void *memcpy(void *restrict dest, void *const restrict src, size_t len) {
