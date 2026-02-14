@@ -49,5 +49,7 @@ __attribute__((regparm(3))) void kernel_main(uint32_t bootloader_magic,
   setup_gdt();
   setup_idt();
 
+  print_stack();
+
   term_writeline("exiting...");
 }

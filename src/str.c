@@ -68,10 +68,10 @@ char *itohex(uint32_t val, struct slice_char buf) {
   strcpy(buf.ptr, "0x");
 
   size_t len = 0, idx = 2;
-  while (len < 3 && ((val >> ((3 - len) * 8)) & 0xFF) == 0) len++;
   for (; len < 4; len++) {
     REQUIRE(idx < buf.len);
     uint8_t slice = (val >> ((3 - len) * 8)) & 0xFF;
+    if (slice == 0 && len < 3) continue;
     buf.ptr[idx++] = hex_map[slice >> 4];
     buf.ptr[idx++] = hex_map[slice & 0x0F];
   }
