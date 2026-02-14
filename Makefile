@@ -45,7 +45,7 @@ CLEAN_LIST := $(TARGET) \
 
 .PHONY: all
 all: $(TARGET)
-	@grub2-file --is-x86-multiboot $(TARGET)
+	@grub2-file --is-x86-multiboot2 $(TARGET)
 	@echo Finished building $(TARGET_NAME).
 
 .PHONY: dirs
@@ -62,16 +62,15 @@ $(BUILD_PATH)/%.o: %.s
 	$(AS) -o $@ $<
 
 .PHONY: run
-run: $(TARGET)
-	qemu-system-i386 -kernel $(TARGET)
+run: run-grub
 
-.PHONY: run-grub
 run-grub: iso
-	qemu-system-i386 -cdrom $(TARGET_ISO)
+	qemu-system-i386 -drive format=raw,file=$(TARGET_ISO)
 
 iso: $(TARGET_ISO)
 
 $(TARGET_ISO): $(TARGET)
+	@grub2-file --is-x86-multiboot2 $(TARGET)
 	@cp -f $< $(TARGET_GRUB)
 	@grub2-mkrescue -o $@ $(GRUB_PATH)
 

@@ -23,10 +23,14 @@ struct _print_entry {
 }
 
 #define __PRINT_ENTRY(data)  _Generic((data), \
+int8_t: __PRINT_ENTRY_INT(data), \
+int16_t: __PRINT_ENTRY_INT(data), \
 int32_t: __PRINT_ENTRY_INT(data), \
-uint32_t: __PRINT_ENTRY_INT(data),\
-uint16_t: __PRINT_ENTRY_INT(data),\
-int16_t: __PRINT_ENTRY_INT(data),\
+int64_t: __PRINT_ENTRY_INT(data), \
+uint8_t: __PRINT_ENTRY_INT(data), \
+uint16_t: __PRINT_ENTRY_INT(data), \
+uint32_t: __PRINT_ENTRY_INT(data), \
+uint64_t: __PRINT_ENTRY_INT(data), \
 char*:  __PRINT_ENTRY_STR(data)\
         )
 
