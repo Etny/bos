@@ -4,6 +4,7 @@
 
 #include "./gdt_dec.h"
 #include "asm.h"
+#include "panic.h"
 
 struct gdt_entry {
   uint16_t limit_lower : 16;

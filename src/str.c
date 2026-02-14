@@ -60,6 +60,27 @@ char *itos(int32_t val, struct slice_char buf) {
   return buf.ptr + total_len;
 }
 
+static char hex_map[16] = {'0', '1', '2', '3', '4', '5', '6', '7',
+                           '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+
+char *itohex(uint32_t val, struct slice_char buf) {
+  REQUIRE(buf.len >= 3);
+  strcpy(buf.ptr, "0x");
+
+  size_t len = 0, idx = 2;
+  while (len < 3 && ((val >> ((3 - len) * 8)) & 0xFF) == 0) len++;
+  for (; len < 4; len++) {
+    REQUIRE(idx < buf.len);
+    uint8_t slice = (val >> ((3 - len) * 8)) & 0xFF;
+    buf.ptr[idx++] = hex_map[slice >> 4];
+    buf.ptr[idx++] = hex_map[slice & 0x0F];
+  }
+
+  buf.ptr[idx] = 0;
+
+  return buf.ptr + idx;
+}
+
 void *memcpy(void *restrict dest, void *const restrict src, size_t len) {
   const uint8_t *src_p = (const uint8_t *)src;
   uint8_t *dest_p = (uint8_t *)dest;
@@ -82,5 +103,5 @@ char *strcpy(char *restrict dest, const char *restrict src) {
   do {
     *dest++ = *src++;
   } while (src[-1]);
-  return dest;
+  return dest - 1;
 }

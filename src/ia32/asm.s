@@ -45,3 +45,4 @@ read_vendor_id:
     pop %ebx
     pop %ebp
     ret
+

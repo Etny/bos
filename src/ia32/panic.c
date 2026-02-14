@@ -1,7 +1,49 @@
 #include "panic.h"
 
+#include <stdint.h>
+
+#include "multiboot2.h"
+#include "print.h"
 #include "slice.h"
+#include "str.h"
 #include "terminal.h"
+
+void print_source_line(uint32_t ret_addr) {
+  uint32_t largest_entry = 0;
+  const char *name = 0;
+  for (size_t idx = 1; idx < loaded_symbols.entries; idx++) {
+    if (ELF32_ST_TYPE(loaded_symbols.symtab[idx].st_info) != ELF32_TYPE_FUNC)
+        && ELF32_ST_TYPE(loaded_symbols.symtab[idx].st_info) != ELF32_TYPE_LABEL)) continue;
+    if (loaded_symbols.symtab[idx].st_value > ret_addr) continue;
+    if (loaded_symbols.symtab[idx].st_value < largest_entry) continue;
+    largest_entry = loaded_symbols.symtab[idx].st_value;
+    name = loaded_symbols.strtab + loaded_symbols.symtab[idx].st_name;
+  }
+  char hex_buf[12];
+  itohex(ret_addr - largest_entry, TO_SLICE(hex_buf));
+  term_write("    ");
+  term_write(name);
+  term_write(" + ");
+  term_write(hex_buf);
+  term_write(" @ ");
+  itohex(ret_addr, TO_SLICE(hex_buf));
+  term_writeline(hex_buf);
+}
+
+struct stack_frame {
+  struct stack_frame *next;
+  uintptr_t ret_addr;
+};
+
+void print_stack(void) {
+  struct stack_frame *stack;
+  asm volatile("mov %%ebp, %0" : "=r"(stack));
+
+  while (stack) {
+    print_source_line(stack->ret_addr);
+    stack = stack->next;
+  }
+}
 
 void _panic(const char *error, const char *file, const char *line) {
   asm volatile("cli");
@@ -12,6 +54,8 @@ void _panic(const char *error, const char *file, const char *line) {
   term_write(":");
   term_writeline(line);
   term_writeline(error);
+  term_writeline("stacktrace:");
+  print_stack();
 
   for (;;);
 }

@@ -17,4 +17,6 @@ int32_t atoi(const char *str);
 // char *itos(int32_t val, char *buffer, size_t bufsize);
 char *itos(int32_t val, struct slice_char);
 
+char *itohex(uint32_t val, struct slice_char);
+
 #endif  // !STR_H

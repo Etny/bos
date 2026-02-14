@@ -17,4 +17,6 @@ do {                                        \
         panic("Requirement failed: "#cond); \
 } while(0);
 
+void print_stack(void);
+
 #endif  // !__PANIC_H

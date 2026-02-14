@@ -12,8 +12,13 @@ stack_top:
 .type _start, @function
 _start:
     // Set up stack
+    mov $0, %ebp
     mov $stack_top, %esp
 
+    // Move the bootloader information
+    // into the right registers to pass
+    // to kernel main
+    mov %ebx, %edx
     call kernel_main
 
     cli
