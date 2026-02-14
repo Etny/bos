@@ -4,6 +4,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "alloc.h"
+
 #define __SLICE_Y(type, name, base, length) \
     __SLICE_X(type, name, base, length) \
     __SLICE_X(type*, name ## _ptr, base, length)
@@ -28,11 +30,21 @@ __SLICE_TYPES(a, b)
 #define __SLICE_X(type, name, base, length) \
     type*: (struct slice_##name) { .ptr = (type*)base, .len = length },
 
-#define slice_len(base, length) _Generic((base), \
+#define SLICE(base, length) _Generic((base), \
         __SLICE_TYPES(base, length) \
         default: (struct slice_void_ptr) {.ptr = (void*)base, .len = length} \
 )
 
-#define slice(base) slice_len(base, (sizeof(base) / sizeof(base[0])))
+#define TO_SLICE(base) SLICE(base, (sizeof(base) / sizeof(base[0])))
+
+#define SLICE_STACK(req_type, length) _Generic((req_type*){0}, \
+        __SLICE_TYPES(((req_type[length]){0}), length) \
+        default: (struct slice_void_ptr) {.ptr = (void*)0, .len = length} \
+)
+
+#define SLICE_ALLOC(req_type, length) _Generic((req_type*){0}, \
+        __SLICE_TYPES(malloc(sizeof(req_type) * length), length) \
+        default: (struct slice_void_ptr) {.ptr = (void*)0, .len = length} \
+)
 
 #endif

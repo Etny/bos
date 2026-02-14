@@ -5,11 +5,11 @@
 #include "terminal.h"
 
 void __print(struct _print_entry entry) {
-  char buf[100];
+  struct slice_char buf = SLICE_STACK(char, 100);
   switch (entry.kind) {
     case INT:
-      itos(entry.data.data_int, slice(buf));
-      term_writeline(buf);
+      itos(entry.data.data_int, buf);
+      term_writeline(buf.ptr);
       break;
     case STR:
       term_writeline(entry.data.data_str);

@@ -1,5 +1,6 @@
 #include "panic.h"
 
+#include "slice.h"
 #include "terminal.h"
 
 void _panic(const char *error, const char *file, const char *line) {

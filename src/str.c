@@ -81,6 +81,6 @@ void *memmove(void *dest, void *src, size_t len) {
 char *strcpy(char *restrict dest, const char *restrict src) {
   do {
     *dest++ = *src++;
-  } while (*src);
+  } while (src[-1]);
   return dest;
 }

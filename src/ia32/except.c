@@ -13,7 +13,7 @@
 void exception_handler(struct registers* reg) {
   char buf[100];
   char* head = strcpy(buf, "Received interupt: ");
-  head = itos(reg->int_code, slice_len(head, 10));
+  head = itos(reg->int_code, SLICE(head, 10));
   head = strcpy(head, " and error code ");
   // head = itos(reg->err_code, head, 10);
   panic(buf);
