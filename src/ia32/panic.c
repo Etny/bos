@@ -14,7 +14,7 @@ void print_source_line(uint32_t ret_addr) {
   for (size_t idx = 1; idx < loaded_symbols.entries; idx++) {
     if (ELF32_ST_TYPE(loaded_symbols.symtab[idx].st_info) != ELF32_TYPE_FUNC)
         && ELF32_ST_TYPE(loaded_symbols.symtab[idx].st_info) != ELF32_TYPE_LABEL)) continue;
-    if (loaded_symbols.symtab[idx].st_value > ret_addr) continue;
+    if (loaded_symbols.symtab[idx].st_value > ret_addr - 1) continue;
     if (loaded_symbols.symtab[idx].st_value < largest_entry) continue;
     largest_entry = loaded_symbols.symtab[idx].st_value;
     name = loaded_symbols.strtab + loaded_symbols.symtab[idx].st_name;

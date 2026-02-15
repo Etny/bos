@@ -5,9 +5,7 @@
 
 .macro ITR_STUB_NONERROR num
 itr_stub_\num:
-    push %ebp
-    mov %esp, %ebp
-    cli
+    cli 
     pushl $0
     pushl $\num
     jmp itr_stub_common
@@ -16,8 +14,6 @@ itr_stub_\num:
 .macro ITR_STUB_ERROR num
 itr_stub_\num:
     cli
-    push %ebp
-    mov %esp, %ebp
     pushl $\num
     jmp itr_stub_common
 .endm
@@ -63,17 +59,15 @@ itr_stub_common:
     call exception_handler
     add $4, %esp 
 
-    popl %ebx         # return ds
-    mov %bx, %ds
+    pop %ebx         # return ds
     mov %bx, %ds
     mov %bx, %es
     mov %bx, %fs
     mov %bx, %gs
     mov %bx, %ss
 
-
     popa
-    addl $8, %esp       # move the stack down 8 bytes to clean 
+    add $8, %esp       # move the stack down 8 bytes to clean 
     pop %ebp            # up the pushed error- and int code
     sti                 
     iret            

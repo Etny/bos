@@ -15,6 +15,21 @@
 #include "str.h"
 #include "terminal.h"
 
+extern char stack_bottom, stack_top;
+
+void print_info(void) {
+  char buf[100];
+  char* head = buf;
+  head = strcpy(head, "stack ");
+  head = itohex((uint32_t)&stack_top, SLICE(head, 13));
+  head = strcpy(head, " to ");
+  head = itohex((uint32_t)&stack_bottom, SLICE(head, 13));
+  head = strcpy(head, " with size ");
+  head =
+      itohex((uint32_t)&stack_top - (uint32_t)&stack_bottom, SLICE(head, 13));
+  term_writeline(buf);
+}
+
 void kernel_main(uint32_t bootloader_magic, void* info) {
   term_init();
   term_writeline("bad operating system version " __VERSION " booting...");
@@ -36,6 +51,8 @@ void kernel_main(uint32_t bootloader_magic, void* info) {
   else
     term_write("N/A");
   term_writeline("");
+
+  print_info();
 
   if (is_protected_mode())
     term_writeline("running in 32-bit protected mode");

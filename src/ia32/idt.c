@@ -48,12 +48,12 @@ void set_idt_entry(size_t idx, uint8_t flags) {
   entry->_zero = 0;
   entry->flags = flags;
   entry->seg_selector = GDT_KERNEL_CODE_SEG_IDX;
-  entry->offset_lower = (uint32_t)itr_stub_table[idx] & 0x0000FFFF;
-  entry->offset_upper = (uint32_t)itr_stub_table[idx] >> 16;
+  entry->offset_lower = (uintptr_t)itr_stub_table[idx] & 0x0000FFFF;
+  entry->offset_upper = (uintptr_t)itr_stub_table[idx] >> 16;
 }
 
 void setup_idt(void) {
-  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_INTR_32);
+  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_TRAP_32);
 
   header.size = (uint16_t)sizeof(struct gate_desc) * 32 - 1;
   header.offset = (uintptr_t)&boot_idt;
