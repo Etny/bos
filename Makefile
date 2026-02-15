@@ -17,7 +17,6 @@ AS := ./toolchain/bin/i686-elf-as
 
 CFLAGS := 	-Wall -Wextra -Werror \
 			-g \
-			-O2 \
 			-ffreestanding \
 			-std=gnu99  \
 			-D__VERSION=\"$(VERSION)\" \
@@ -25,7 +24,6 @@ CFLAGS := 	-Wall -Wextra -Werror \
 			-fno-inline
 
 LDFLAGS :=	-g \
-			-O2 \
 		  	-nostdlib \
 		  	-ffreestanding \
 		  	-lgcc 
@@ -65,8 +63,13 @@ $(BUILD_PATH)/%.o: %.s
 .PHONY: run
 run: run-grub
 
+.PHONY: run-gdb
+run-gdb: iso
+	qemu-system-i386 -s -S -drive format=raw,file=$(TARGET_ISO)
+
+
 run-grub: iso
-	qemu-system-i386 -drive format=raw,file=$(TARGET_ISO)
+	qemu-system-i386 -s -drive format=raw,file=$(TARGET_ISO)
 
 iso: $(TARGET_ISO)
 
