@@ -6,6 +6,7 @@
 
 #include "./gdt_dec.h"
 #include "itr_dec.h"
+#include "panic.h"
 #include "terminal.h"
 
 #define DPL_KERNEL 0
@@ -59,6 +60,8 @@ void setup_idt(void) {
 
   asm volatile("lidt %0" ::"m"(header));
   asm volatile("sti");
+  // asm volatile("int $3");
+  //
 
-  // term_writeline("idt setup complete");
+  term_writeline("idt setup complete");
 }

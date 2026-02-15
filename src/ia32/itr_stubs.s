@@ -5,9 +5,9 @@
 
 .macro ITR_STUB_NONERROR num
 itr_stub_\num:
-    cli
     push %ebp
     mov %esp, %ebp
+    cli
     pushl $0
     pushl $\num
     jmp itr_stub_common
@@ -49,10 +49,10 @@ ITR_STUB_ERROR 21
 itr_stub_common:
     pusha 
 
-    mov %ds, %ax     # move ds into the lower 16 bits of eax
-    pushl %eax        # and push it to reuse later
+    mov %ds, %eax     # move ds into the lower 16 bits of eax
+    push %eax        # and push it to reuse later
 
-    mov $0x10, %ax     # load the kernel data segment selector
+    mov $0x10, %eax     # load the kernel data segment selector
     mov %ax, %ds
     mov %ax, %es
     mov %ax, %fs
@@ -73,10 +73,10 @@ itr_stub_common:
 
 
     popa
-    pop %ebp
-    addl $8, %esp     # move the stack down 8 bytes to clean 
-    sti
-    iret            # up the pushed error- and int code
+    addl $8, %esp       # move the stack down 8 bytes to clean 
+    pop %ebp            # up the pushed error- and int code
+    sti                 
+    iret            
 
 .section .data
 

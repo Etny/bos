@@ -21,7 +21,8 @@ CFLAGS := 	-Wall -Wextra -Werror \
 			-ffreestanding \
 			-std=gnu99  \
 			-D__VERSION=\"$(VERSION)\" \
-			-Isrc/include -Isrc/$(TARGET_ARCH)/include
+			-Isrc/include -Isrc/$(TARGET_ARCH)/include \
+			-fno-inline
 
 LDFLAGS :=	-g \
 			-O2 \

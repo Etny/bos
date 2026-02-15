@@ -45,7 +45,18 @@ void print_stack(void) {
   }
 }
 
-void _panic(const char *error, const char *file, const char *line) {
+void print_stack_from(uint32_t ip, uint32_t bp) {
+  print_source_line(ip);
+  struct stack_frame *stack = (struct stack_frame *)bp;
+
+  while (stack) {
+    print_source_line(stack->ret_addr);
+    stack = stack->next;
+  }
+}
+
+void _panic(const char *error, const char *file, const char *line,
+            struct panic_context ctx) {
   asm volatile("cli");
   term_setcolor(VGA_COLOR_RED, VGA_COLOR_BLACK);
   term_writeline("--!PANIC!--");
@@ -55,7 +66,11 @@ void _panic(const char *error, const char *file, const char *line) {
   term_writeline(line);
   term_writeline(error);
   term_writeline("stacktrace:");
-  print_stack();
+
+  if (ctx.ip == 0)
+    print_stack();
+  else
+    print_stack_from(ctx.ip, ctx.bp);
 
   for (;;);
 }
