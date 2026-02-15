@@ -17,14 +17,14 @@ enable_protected_mode:
 .type refresh_cs, @function
 
 refresh_cs:
-    ljmp $0x08, $1f
-    1:
     mov $0x10, %ax
     mov %ax, %ds
     mov %ax, %es
     mov %ax, %fs
     mov %ax, %gs
     mov %ax, %ss
+    ljmp $0x08, $1f
+    1:
     ret
 
 

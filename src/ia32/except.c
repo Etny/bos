@@ -15,7 +15,7 @@ void exception_handler(struct registers* reg) {
   char* head = strcpy(buf, "Received interupt: ");
   head = itos(reg->int_code, SLICE(head, 10));
   head = strcpy(head, " and error code ");
-  head = itos(reg->err_code, SLICE(head, 10));
+  head = itohex(reg->err_code, SLICE(head, 10));
   panic(buf);
 
   // if (reg->int_code == 8) *((char*)0xB8000) = '0' + reg->int_code;

@@ -18,7 +18,8 @@ _start:
     // Move the bootloader information
     // into the right registers to pass
     // to kernel main
-    mov %ebx, %edx
+    push %ebx
+    push %eax
     call kernel_main
 
     cli

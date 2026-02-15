@@ -5,6 +5,7 @@
 #include "./gdt_dec.h"
 #include "asm.h"
 #include "panic.h"
+#include "terminal.h"
 
 struct gdt_entry {
   uint16_t limit_lower : 16;
@@ -44,4 +45,5 @@ void setup_gdt(void) {
 
   load_gdt(&desc);
   refresh_cs();
+  term_writeline("gdt setup complete");
 }

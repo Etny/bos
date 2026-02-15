@@ -5,6 +5,9 @@
 
 .macro ITR_STUB_NONERROR num
 itr_stub_\num:
+    cli
+    push %ebp
+    mov %esp, %ebp
     pushl $0
     pushl $\num
     jmp itr_stub_common
@@ -12,6 +15,9 @@ itr_stub_\num:
 
 .macro ITR_STUB_ERROR num
 itr_stub_\num:
+    cli
+    push %ebp
+    mov %esp, %ebp
     pushl $\num
     jmp itr_stub_common
 .endm
@@ -65,8 +71,11 @@ itr_stub_common:
     mov %bx, %gs
     mov %bx, %ss
 
+
     popa
+    pop %ebp
     addl $8, %esp     # move the stack down 8 bytes to clean 
+    sti
     iret            # up the pushed error- and int code
 
 .section .data

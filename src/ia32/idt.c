@@ -6,17 +6,19 @@
 
 #include "./gdt_dec.h"
 #include "itr_dec.h"
+#include "terminal.h"
 
 #define DPL_KERNEL 0
 #define GATE_TYPE_TASK      0b0101
 #define GATE_TYPE_INT_16    0b0110
 #define GATE_TYPE_TRAP_16   0b0111
-#define GATE_TYPE_INT_32    0b1110
+#define GATE_TYPE_INTR_32   0b1110
 #define GATE_TYPE_TRAP_32   0b1111
 
 #define GATE_FLAGS(dpl, type) (0 | (1 << 7) | ((dpl & 0b11) << 5) | (type & 0b1111))
 
 #define GATE_FLAGS_TRAP_32 GATE_FLAGS(DPL_KERNEL, GATE_TYPE_TRAP_32)
+#define GATE_FLAGS_INTR_32 GATE_FLAGS(DPL_KERNEL, GATE_TYPE_INTR_32)
 
 struct gate_desc {
   uint16_t offset_lower;
@@ -49,12 +51,14 @@ void set_idt_entry(size_t idx, uint8_t flags) {
   entry->offset_upper = (uint32_t)itr_stub_table[idx] >> 16;
 }
 
-void setup_idt() {
-  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_TRAP_32);
+void setup_idt(void) {
+  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_INTR_32);
 
   header.size = (uint16_t)sizeof(struct gate_desc) * 32 - 1;
   header.offset = (uintptr_t)&boot_idt;
 
   asm volatile("lidt %0" ::"m"(header));
   asm volatile("sti");
+
+  // term_writeline("idt setup complete");
 }
