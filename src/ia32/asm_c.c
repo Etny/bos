@@ -38,3 +38,7 @@ void write_msr(uint32_t addr, uint64_t val) {
 
   asm volatile("wrmsr" ::"c"(addr), "a"(lsb), "d"(msb) : "memory");
 }
+
+void outb(uint8_t addr, uint8_t data) {
+  asm volatile("outb %b0, %w1" ::"a"(data), "Nd"(addr) : "memory");
+}

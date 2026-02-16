@@ -77,8 +77,7 @@ itr_stub_common:
     mov %bx, %ss
 
     popa
-    add $8, %esp       # move the stack down 8 bytes to clean 
-    pop %ebp            # up the pushed error- and int code
+    add $8, %esp       # move the stack down 8 bytes to clean # up the pushed error- and int code
     sti                 
     iret            
 

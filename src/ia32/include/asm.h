@@ -22,4 +22,6 @@ struct cpuid_data cpuid(uint32_t eax);
 uint64_t read_msr(uint32_t addr);
 void write_msr(uint32_t addr, uint64_t val);
 
+void outb(uint8_t addr, uint8_t data);
+
 #endif  // !ASM_H
