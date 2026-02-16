@@ -27,7 +27,6 @@ refresh_cs:
     1:
     ret
 
-
 .section .text
 .globl read_vendor_id
 .type read_vendor_id, @function

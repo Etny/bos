@@ -9,6 +9,7 @@
 #include "cpu.h"
 #include "gdt.h"
 #include "idt.h"
+#include "irq.h"
 #include "panic.h"
 #include "print.h"
 #include "slice.h"
@@ -28,6 +29,14 @@ void print_info(void) {
   head =
       itohex((uint32_t)&stack_top - (uint32_t)&stack_bottom, SLICE(head, 13));
   term_writeline(buf);
+
+  if (is_protected_mode())
+    term_writeline("running in 32-bit protected mode");
+  else
+    panic("uh-oh, we are running in 16-bit real mode...");
+
+  term_write("running on ");
+  term_writeline(get_vendor_id().name);
 }
 
 void kernel_main(uint32_t bootloader_magic, void* info) {
@@ -54,16 +63,9 @@ void kernel_main(uint32_t bootloader_magic, void* info) {
 
   print_info();
 
-  if (is_protected_mode())
-    term_writeline("running in 32-bit protected mode");
-  else
-    panic("uh-oh, we are running in 16-bit real mode...");
-
-  term_write("running on ");
-  term_writeline(get_vendor_id().name);
-
   setup_gdt();
   setup_idt();
+  setup_irqs();
 
   term_writeline("exiting...");
 }

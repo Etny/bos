@@ -1,4 +1,5 @@
 #include <stdbool.h>
+#include <stdint.h>
 
 #include "asm.h"
 
@@ -12,4 +13,28 @@ bool is_protected_mode(void) {
   int out;
   asm volatile("mov %%cr0, %0" : "=r"(out));
   return out & 0x1;
+}
+
+struct cpuid_data cpuid(uint32_t eax) {
+  struct cpuid_data data;
+  asm volatile("cpuid\n"
+               : "=a"(data.eax), "=b"(data.ebx), "=c"(data.ecx), "=d"(data.edx)
+               : "a"(eax)
+               : "memory");
+
+  return data;
+}
+
+uint64_t read_msr(uint32_t addr) {
+  uint32_t lsb = 0, msb = 0;
+
+  asm volatile("rdmsr" : "=a"(lsb), "=d"(msb) : "c"(addr) : "memory");
+
+  return ((uint64_t)msb << 32) | lsb;
+}
+
+void write_msr(uint32_t addr, uint64_t val) {
+  uint32_t lsb = val & 0xFFFFFFFF, msb = val >> 32;
+
+  asm volatile("wrmsr" ::"c"(addr), "a"(lsb), "d"(msb) : "memory");
 }

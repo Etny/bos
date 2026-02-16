@@ -5,8 +5,11 @@
 #include <stdint.h>
 
 #include "./gdt_dec.h"
+#include "asm.h"
 #include "itr_dec.h"
 #include "panic.h"
+#include "print.h"
+#include "str.h"
 #include "terminal.h"
 
 #define DPL_KERNEL 0
@@ -29,7 +32,7 @@ struct gate_desc {
   uint16_t offset_upper;
 } __attribute__((packed));
 
-#define IDT_ENTRIES 22
+#define IDT_ENTRIES 32
 
 struct gate_desc boot_idt[IDT_ENTRIES];
 
@@ -53,15 +56,11 @@ void set_idt_entry(size_t idx, uint8_t flags) {
 }
 
 void setup_idt(void) {
-  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_TRAP_32);
+  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_INTR_32);
 
   header.size = (uint16_t)sizeof(struct gate_desc) * 32 - 1;
   header.offset = (uintptr_t)&boot_idt;
 
   asm volatile("lidt %0" ::"m"(header));
-  asm volatile("sti");
-  // asm volatile("int $3");
-  //
-
   term_writeline("idt setup complete");
 }

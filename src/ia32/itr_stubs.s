@@ -40,10 +40,20 @@ ITR_STUB_NONERROR 18
 ITR_STUB_NONERROR 19
 ITR_STUB_NONERROR 20
 ITR_STUB_ERROR 21
+ITR_STUB_NONERROR 22
+ITR_STUB_NONERROR 23
+ITR_STUB_NONERROR 24
+ITR_STUB_NONERROR 25
+ITR_STUB_NONERROR 26
+ITR_STUB_NONERROR 27
+ITR_STUB_NONERROR 28
+ITR_STUB_NONERROR 29
+ITR_STUB_NONERROR 30
+ITR_STUB_NONERROR 31
 
 .extern exception_handler
 itr_stub_common:
-    pusha 
+    pusha
 
     mov %ds, %eax     # move ds into the lower 16 bits of eax
     push %eax        # and push it to reuse later
@@ -83,7 +93,7 @@ itr_stub_common:
 itr_stub_table:
     .set i, 0
 
-    .rept 22
+    .rept 32
         ITR_STUB_LABEL %i
         .set i, i+1
     .endr
