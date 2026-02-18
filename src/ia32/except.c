@@ -19,8 +19,9 @@ void exception_handler(struct registers* reg) {
   head = strcpy(head, " and error code ");
   head = itohex(reg->err_code, SLICE(head, 10));
   print(buf);
-  if (reg->int_code == 30)
+  if (reg->int_code > 32)
     eoi();
   else
-    panic_from(buf, reg->eip, reg->ebp);
+    // panic_from(buf, reg->eip, reg->ebp);
+    panic(buf);
 }

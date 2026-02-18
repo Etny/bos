@@ -32,7 +32,7 @@ struct gate_desc {
   uint16_t offset_upper;
 } __attribute__((packed));
 
-#define IDT_ENTRIES 32
+#define IDT_ENTRIES 35
 
 struct gate_desc boot_idt[IDT_ENTRIES];
 
@@ -56,7 +56,7 @@ void set_idt_entry(size_t idx, uint8_t flags) {
 }
 
 void setup_idt(void) {
-  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_INTR_32);
+  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_TRAP_32);
 
   header.size = (uint16_t)sizeof(struct gate_desc) * 32 - 1;
   header.offset = (uintptr_t)&boot_idt;

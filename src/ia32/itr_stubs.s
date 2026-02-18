@@ -50,6 +50,9 @@ ITR_STUB_NONERROR 28
 ITR_STUB_NONERROR 29
 ITR_STUB_NONERROR 30
 ITR_STUB_NONERROR 31
+ITR_STUB_NONERROR 32
+ITR_STUB_NONERROR 33
+ITR_STUB_NONERROR 34
 
 .extern exception_handler
 itr_stub_common:
@@ -92,7 +95,7 @@ itr_stub_common:
 itr_stub_table:
     .set i, 0
 
-    .rept 32
+    .rept 35
         ITR_STUB_LABEL %i
         .set i, i+1
     .endr

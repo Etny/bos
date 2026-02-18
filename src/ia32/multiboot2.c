@@ -6,8 +6,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "acpi.h"
 #include "boot.h"
+#include "panic.h"
 #include "print.h"
+#include "str.h"
 
 struct __attribute__((aligned(8))) multiboot2_header_tag {
   uint16_t type;
@@ -74,10 +77,12 @@ struct mb2_elf_symbols_tag {
 #define MB2_INFO_TYPE_CMDARGS       1
 #define MB2_INFO_TYPE_BLNAME        2
 #define MB2_INFO_TYPE_ELFSYMBOLS    9
+#define MB2_INFO_TYPE_ACPI1_RSDP    14
 
 #define ELF_SHT_SYMTAB  2
 
 struct elf_symbols loaded_symbols = {0};
+
 struct bootloader_info bootloader_info_load(void* info_ptr) {
   struct mb2_info_tag* tag = (info_ptr + 8);
 
@@ -105,6 +110,10 @@ struct bootloader_info bootloader_info_load(void* info_ptr) {
           loaded_symbols.entries =
               symbols->headers[i].sh_size / symbols->headers[i].sh_entsize;
         }
+        break;
+
+      case MB2_INFO_TYPE_ACPI1_RSDP:
+        rsdp_addr = ((void*)tag + 8);
         break;
     }
 

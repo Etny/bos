@@ -25,7 +25,7 @@ enum VGA_COLOR {
 
 void term_init(void);
 void term_setcolor(enum VGA_COLOR fg, enum VGA_COLOR bg);
-void term_printchar(char c);
+void term_putchar(char c);
 void term_putchar_at(char c, size_t x, size_t y);
 void term_write(const char *str);
 void term_writeline(const char *str);

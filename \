@@ -1,0 +1,3 @@
+#include "acpi.h"
+
+struct RSDP* rsdp_addr;

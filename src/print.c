@@ -14,5 +14,10 @@ void __print(struct _print_entry entry) {
     case STR:
       term_writeline(entry.data.data_str);
       break;
+    case SLICE:
+      for (size_t i = 0; i < entry.data.data_slice.len; i++)
+        term_putchar(entry.data.data_slice.ptr[i]);
+      term_writeline("");
+      break;
   }
 }

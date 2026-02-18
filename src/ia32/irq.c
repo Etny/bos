@@ -4,12 +4,14 @@
 #include <stdint.h>
 
 #include "asm.h"
+#include "irq_ia32.h"
 #include "panic.h"
 #include "print.h"
 #include "slice.h"
 #include "str.h"
 
 void disable_pics(void);
+void setup_ioapic(void);
 
 #define LOCAL_APIC_BASE 0xFEE00000
 #define SPURIOUS_INTR_OFFSET 0xF0
@@ -39,18 +41,32 @@ void setup_irqs(void) {
   // before it starts sending us random INT 8's again
   disable_pics();
 
+  setup_ioapic();
+
   // We need to set the Software enable bit
   // in the Spurious Interrupt Vector Register
   // (Intel guide 13.4.3 point 2)
   uint32_t* spurious_intr = apic_register(SPURIOUS_INTR_OFFSET);
   *spurious_intr = (*spurious_intr | (1 << 8));
 
-  // *apic_register(TIMER_DIV_OFFSET) = 0x0A;
-  // *apic_register(TIMER_INTR_OFFSET) = (1 << 17) | 30;
-  // *apic_register(TIMER_CNT_OFFSET) = 1 << 20;
-
-  // We are now ready to receive interupts :)
+  // We are now ready to receive interrupts :)
   asm volatile("sti");
+}
+
+struct ioapic {
+  uint8_t regsel;
+  uint64_t padding_1;
+  uint64_t padding_2 : 56;
+  uint32_t regwin;
+} __attribute__((packed));
+struct ioapic* ioapic_addr = NULL;
+
+void setup_ioapic(void) {
+  if (!ioapic_addr) panic("ioapic address is null");
+  ioapic_addr->regsel = 0x12;
+  ioapic_addr->regwin = 33;
+  ioapic_addr->regsel = 0x13;
+  ioapic_addr->regwin = 0;
 }
 
 #define EOI_OFFSET 0xB0
@@ -70,9 +86,9 @@ void disable_pics(void) {
   io_wait();
   outb(PIC2_CMD_PORT, ICW1_INIT);
   io_wait();
-  outb(PIC1_DATA_PORT, 16);  // Word 1: The offset of their vectors
+  outb(PIC1_DATA_PORT, 64);  // Word 1: The offset of their vectors
   io_wait();
-  outb(PIC2_DATA_PORT, 16);
+  outb(PIC2_DATA_PORT, 96);
   io_wait();
   outb(PIC1_DATA_PORT, 4);  // Word 2: Tell PIC1 that it has a slave on IRQ2,
                             // and PIC2 that is a slave on 2

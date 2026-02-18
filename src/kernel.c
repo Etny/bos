@@ -3,6 +3,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "acpi.h"
 #include "alloc.h"
 #include "asm.h"
 #include "boot.h"
@@ -18,7 +19,42 @@
 
 extern char stack_bottom, stack_top;
 
-void print_info(void) {
+void print_info(void* info);
+
+void kernel_main(uint32_t bootloader_magic, void* info) {
+  term_init();
+  term_writeline("bad operating system version " __VERSION " booting...");
+
+  if (!verify_bootloader_signature(bootloader_magic))
+    panic("invalid bootloader magic number, only multiboot2 is supported");
+
+  print_info(info);
+
+  setup_gdt();
+  setup_idt();
+  setup_acpi();
+  setup_irqs();
+
+  term_writeline("exiting...");
+  for (;;);
+}
+
+void print_info(void* info) {
+  struct bootloader_info bl_info = bootloader_info_load(info);
+
+  term_write("loaded by ");
+  if (bl_info.bootloader_name)
+    term_write(bl_info.bootloader_name);
+  else
+    term_write("unknown bootloader");
+
+  term_write(" with args ");
+  if (bl_info.args)
+    term_write(bl_info.args);
+  else
+    term_write("N/A");
+  term_writeline("");
+
   char buf[100];
   char* head = buf;
   head = strcpy(head, "stack ");
@@ -37,35 +73,4 @@ void print_info(void) {
 
   term_write("running on ");
   term_writeline(get_vendor_id().name);
-}
-
-void kernel_main(uint32_t bootloader_magic, void* info) {
-  term_init();
-  term_writeline("bad operating system version " __VERSION " booting...");
-
-  if (!verify_bootloader_signature(bootloader_magic))
-    panic("invalid bootloader magic number, only multiboot2 is supported");
-
-  struct bootloader_info bl_info = bootloader_info_load(info);
-
-  term_write("loaded by ");
-  if (bl_info.bootloader_name)
-    term_write(bl_info.bootloader_name);
-  else
-    term_write("unknown bootloader");
-
-  term_write(" with args ");
-  if (bl_info.args)
-    term_write(bl_info.args);
-  else
-    term_write("N/A");
-  term_writeline("");
-
-  print_info();
-
-  setup_gdt();
-  setup_idt();
-  setup_irqs();
-
-  term_writeline("exiting...");
 }

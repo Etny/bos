@@ -1,5 +1,6 @@
 #include "str.h"
 
+#include <stdbool.h>
 #include <stdint.h>
 
 #include "panic.h"
@@ -104,4 +105,16 @@ char *strcpy(char *restrict dest, const char *restrict src) {
     *dest++ = *src++;
   } while (src[-1]);
   return dest - 1;
+}
+
+int strcmp(const char *s1, const char *s2) {
+  int val;
+  while (*s1 || *s2) {
+    val = *(s1++) - *(s2++);
+    if (val) return val;
+  }
+  return 0;
+}
+inline bool streq(const char *s1, const char *s2) {
+  return (strcmp(s1, s2) == 0);
 }

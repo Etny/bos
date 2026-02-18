@@ -1,6 +1,7 @@
 #ifndef STR_H
 #define STR_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -10,6 +11,8 @@ void *memcpy(void *restrict dest, void *restrict src, size_t len);
 void *memmove(void *dest, void *src, size_t len);
 
 char *strcpy(char *restrict dest, const char *restrict src);
+int strcmp(const char *s1, const char *s2);
+bool streq(const char *s1, const char *s2);
 
 size_t strlen(const char *str);
 int32_t atoi(const char *str);

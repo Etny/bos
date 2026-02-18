@@ -1,6 +1,7 @@
 #ifndef __SLICE_H
 #define __SLICE_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -36,6 +37,7 @@ __SLICE_TYPES(a, b)
 )
 
 #define TO_SLICE(base) SLICE(base, (sizeof(base) / sizeof(base[0])))
+#define AS_SLICE(str) SLICE(str, (sizeof(str) - 1))
 
 #define SLICE_STACK(req_type, length) _Generic((req_type*){0}, \
         __SLICE_TYPES(((req_type[length]){0}), length) \
@@ -46,5 +48,8 @@ __SLICE_TYPES(a, b)
         __SLICE_TYPES(malloc(sizeof(req_type) * length), length) \
         default: (struct slice_void_ptr) {.ptr = (void*)0, .len = length} \
 )
+
+int slccmp(struct slice_char s1, struct slice_char s2);
+bool slceq(struct slice_char s1, struct slice_char s2);
 
 #endif
