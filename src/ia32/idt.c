@@ -6,11 +6,26 @@
 
 #include "./gdt_dec.h"
 #include "asm.h"
+#include "except.h"
+#include "irq.h"
 #include "itr_dec.h"
 #include "panic.h"
 #include "print.h"
 #include "str.h"
 #include "terminal.h"
+
+void (*irq_table[224])(uint32_t int_code) = {0};
+void interrupt_handler(struct itr_data* data) {
+  // ITR 0-31 are either exceptions or reserved
+  if (data->int_code < 32) {
+    exception_handler(data);
+  }
+  void (*handler)(uint32_t int_code) = irq_table[data->int_code];
+  if (!handler) exception_handler(data);
+
+  handler(data->int_code);
+  eoi();
+}
 
 #define DPL_KERNEL 0
 #define GATE_TYPE_TASK      0b0101
@@ -32,7 +47,7 @@ struct gate_desc {
   uint16_t offset_upper;
 } __attribute__((packed));
 
-#define IDT_ENTRIES 35
+#define IDT_ENTRIES 256
 
 struct gate_desc boot_idt[IDT_ENTRIES];
 
@@ -56,9 +71,9 @@ void set_idt_entry(size_t idx, uint8_t flags) {
 }
 
 void setup_idt(void) {
-  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_TRAP_32);
+  for (size_t i = 0; i < IDT_ENTRIES; i++) set_idt_entry(i, GATE_FLAGS_INTR_32);
 
-  header.size = (uint16_t)sizeof(struct gate_desc) * 32 - 1;
+  header.size = (uint16_t)sizeof(struct gate_desc) * IDT_ENTRIES - 1;
   header.offset = (uintptr_t)&boot_idt;
 
   asm volatile("lidt %0" ::"m"(header));

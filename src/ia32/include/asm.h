@@ -23,5 +23,6 @@ uint64_t read_msr(uint32_t addr);
 void write_msr(uint32_t addr, uint64_t val);
 
 void outb(uint8_t addr, uint8_t data);
+uint8_t inb(uint8_t addr);
 
 #endif  // !ASM_H

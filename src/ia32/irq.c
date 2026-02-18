@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "asm.h"
+#include "idt.h"
 #include "irq_ia32.h"
 #include "panic.h"
 #include "print.h"
@@ -34,6 +35,11 @@ void set_irq_mask(uint16_t offset, bool mask) {
   *irq_register = (*irq_register * (mask << 16));
 }
 
+void keyb(uint32_t __attribute__((unused)) _) {
+  uint32_t scancode = inb(0x60);
+  print(scancode);
+}
+
 void setup_irqs(void) {
   if (!check_local_apic()) panic("no local APIC support found");
 
@@ -41,14 +47,17 @@ void setup_irqs(void) {
   // before it starts sending us random INT 8's again
   disable_pics();
 
-  setup_ioapic();
-
   // We need to set the Software enable bit
   // in the Spurious Interrupt Vector Register
   // (Intel guide 13.4.3 point 2)
   uint32_t* spurious_intr = apic_register(SPURIOUS_INTR_OFFSET);
   *spurious_intr = (*spurious_intr | (1 << 8));
 
+  // *apic_register(TIMER_DIV_OFFSET) = 0x0A;
+  // *apic_register(TIMER_INTR_OFFSET) = (1 << 17) | 34;
+  // *apic_register(TIMER_CNT_OFFSET) = 1 << 20;
+
+  setup_ioapic();
   // We are now ready to receive interrupts :)
   asm volatile("sti");
 }
@@ -67,6 +76,8 @@ void setup_ioapic(void) {
   ioapic_addr->regwin = 33;
   ioapic_addr->regsel = 0x13;
   ioapic_addr->regwin = 0;
+
+  irq_table[33] = &keyb;
 }
 
 #define EOI_OFFSET 0xB0
@@ -86,9 +97,9 @@ void disable_pics(void) {
   io_wait();
   outb(PIC2_CMD_PORT, ICW1_INIT);
   io_wait();
-  outb(PIC1_DATA_PORT, 64);  // Word 1: The offset of their vectors
+  outb(PIC1_DATA_PORT, 32);  // Word 1: The offset of their vectors
   io_wait();
-  outb(PIC2_DATA_PORT, 96);
+  outb(PIC2_DATA_PORT, 40);
   io_wait();
   outb(PIC1_DATA_PORT, 4);  // Word 2: Tell PIC1 that it has a slave on IRQ2,
                             // and PIC2 that is a slave on 2
@@ -98,7 +109,7 @@ void disable_pics(void) {
   outb(PIC1_DATA_PORT,
        ICW4_INIT);  // Word 3: Tell the PICs we are running on X86
   io_wait();
-  outb(PIC1_DATA_PORT, ICW4_INIT);
+  outb(PIC2_DATA_PORT, ICW4_INIT);
   io_wait();
 
   // Finally, we mask all interrupts

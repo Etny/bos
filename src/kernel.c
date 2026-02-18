@@ -35,8 +35,8 @@ void kernel_main(uint32_t bootloader_magic, void* info) {
   setup_acpi();
   setup_irqs();
 
-  term_writeline("exiting...");
   for (;;);
+  term_writeline("exiting...");
 }
 
 void print_info(void* info) {

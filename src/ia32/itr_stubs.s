@@ -40,21 +40,17 @@ ITR_STUB_NONERROR 18
 ITR_STUB_NONERROR 19
 ITR_STUB_NONERROR 20
 ITR_STUB_ERROR 21
-ITR_STUB_NONERROR 22
-ITR_STUB_NONERROR 23
-ITR_STUB_NONERROR 24
-ITR_STUB_NONERROR 25
-ITR_STUB_NONERROR 26
-ITR_STUB_NONERROR 27
-ITR_STUB_NONERROR 28
-ITR_STUB_NONERROR 29
-ITR_STUB_NONERROR 30
-ITR_STUB_NONERROR 31
-ITR_STUB_NONERROR 32
-ITR_STUB_NONERROR 33
-ITR_STUB_NONERROR 34
 
-.extern exception_handler
+.set i, 22
+
+    .rept 256-22
+        ITR_STUB_NONERROR %i
+        .set i, i+1
+    .endr
+
+
+
+.extern interrupt_handler
 itr_stub_common:
     pusha
 
@@ -69,7 +65,7 @@ itr_stub_common:
     mov %ax, %ss
 
     push %esp
-    call exception_handler
+    call interrupt_handler
     add $4, %esp 
 
     pop %ebx         # return ds
@@ -95,7 +91,7 @@ itr_stub_common:
 itr_stub_table:
     .set i, 0
 
-    .rept 35
+    .rept 256
         ITR_STUB_LABEL %i
         .set i, i+1
     .endr

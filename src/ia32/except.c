@@ -12,16 +12,11 @@
     default : "NO" \
 )
 
-void exception_handler(struct registers* reg) {
+void exception_handler(struct itr_data* reg) {
   char buf[100];
-  char* head = strcpy(buf, "Received interupt: ");
+  char* head = strcpy(buf, "received unhandled interupt: ");
   head = itos(reg->int_code, SLICE(head, 10));
   head = strcpy(head, " and error code ");
   head = itohex(reg->err_code, SLICE(head, 10));
-  print(buf);
-  if (reg->int_code > 32)
-    eoi();
-  else
-    // panic_from(buf, reg->eip, reg->ebp);
-    panic(buf);
+  panic_from(buf, reg->eip, reg->ebp);
 }
